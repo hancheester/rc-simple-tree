@@ -1,0 +1,23 @@
+{
+  "name": "rc-simple-tree",
+  "version": "0.1.0",
+  "description": "A simple tree UI component for React.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hancheester/rc-simple-tree.git"
+  },
+  "keywords": [
+    "tree",
+    "react"
+  ],
+  "author": "Han Chee Tan <hancheester@gmail.com> (https://codecultivation.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hancheester/rc-simple-tree/issues"
+  },
+  "homepage": "https://github.com/hancheester/rc-simple-tree#readme"
+}

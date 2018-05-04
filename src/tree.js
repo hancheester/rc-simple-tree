@@ -90,7 +90,7 @@ class Tree extends React.Component {
         }
 
         if (onLoadData) {
-            onLoadData(nodeId);
+            return onLoadData(nodeId);
         }
     }
 

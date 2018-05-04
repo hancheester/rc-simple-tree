@@ -3,10 +3,18 @@ import classNames from 'classnames';
 import InlineEdit from './inline-edit';
 import * as dropPositions from './drop-positions';
 
+const LOAD_STATUS_NONE = 0;
+const LOAD_STATUS_LOADING = 1;
+const LOAD_STATUS_LOADED = 2;
+
 class TreeNode extends React.Component
 {
     constructor(props) {
         super(props);
+
+        this.state = {
+            loadStatus: LOAD_STATUS_NONE
+        };
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleSelectorClick = this.handleSelectorClick.bind(this);
@@ -38,7 +46,17 @@ class TreeNode extends React.Component
     handleSwitcherClick(event) {
         event.preventDefault();
         const {onNodeExpand} = this.context;
-        onNodeExpand(event, this);
+        const callbackPromise = onNodeExpand(event, this);
+
+        if (callbackPromise && callbackPromise.then) {
+            this.setState({loadStatus: LOAD_STATUS_LOADING});
+
+            callbackPromise.then(() => {
+                this.setState({loadStatus: LOAD_STATUS_LOADED});
+            }).catch(() => {
+                this.setState({loadStatus: LOAD_STATUS_NONE});
+            });
+        }
     }
 
     handleDragStart(event) {
@@ -95,13 +113,22 @@ class TreeNode extends React.Component
             <span onClick={this.handleSwitcherClick}>
                 <i className={`fa fa-chevron-${expanded ? 'down' : 'right'}`}></i>
                 <i className="fa fa-users"></i>
+                
             </span>
         );
     }
 
     renderSelector() {
         const {title, draggable} = this.props;
+        const {loadStatus} = this.state;
         
+        let loadingIcon;
+        if (loadStatus === LOAD_STATUS_LOADING) {
+            loadingIcon = (<i className="fa fa-spinner fa-pulse fa-fw"></i>);
+        } else {
+            loadingIcon = (<i></i>);
+        }
+
         return (
             <span 
                 ref={this.setSelectNodeHandler}
@@ -113,6 +140,7 @@ class TreeNode extends React.Component
                 <span className="ellipsis">
                     <InlineEdit onChange={this.handleTitleChange} className="tree-node-title" text={title}/>
                 </span>
+                {loadingIcon}
             </span>
         );
     }
